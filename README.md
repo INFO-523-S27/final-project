@@ -1,4 +1,4 @@
-# ✅ INFO 511 — Final Project  
+# ✅ INFO 523 — Final Project  
 ## From Data to Decisions: A Reproducible Data Science Investigation with TidyTuesday  
 **⚠️ This is an INDIVIDUAL project (not a team project).**
 
