@@ -1,0 +1,403 @@
+---
+title: "INFO 511 Final Project"
+subtitle: "From Data to Decisions with TidyTuesday"
+author: 
+  - author: "Your Name"
+    affiliations:
+      - name: "College of Information Science, University of Arizona"
+description: "Project description"
+format:
+   html:
+    code-tools: true
+    code-overflow: wrap
+    embed-resources: true
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
+editor: visual
+execute:
+  warning: false
+  echo: false
+  message: false
+  eval: false
+jupyter: python3
+---
+```
+
+## 1. Project Overview
+
+**Project Title:**
+
+> *Your Project Title*
+
+**TidyTuesday Dataset:**
+
+> *Dataset name + link*
+
+**Real-World Motivation:**
+
+> *Why does this dataset and problem matter?*
+
+**Research Questions:**
+
+* **Regression:**
+
+  > *What numeric quantity are you predicting?*
+
+* **Classification:**
+
+  > *What outcome are you classifying (if applicable)?*
+
+* **Clustering:**
+
+  > *What structure or grouping are you exploring (if applicable)?*
+
+**Ethical Framing:**
+
+> *What risks, harms, or biases might exist in this dataset or analysis?*
+
+---
+
+## 2. Setup & Environment
+
+```{python}
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from src import ds  # your reproducible ML pipeline
+
+plt.style.use("default")
+%config InlineBackend.figure_format = "retina"
+```
+
+```{python}
+# Update to point to your dataset
+DATA_PATH = "data/your_tidytuesday_dataset.csv"
+```
+
+---
+
+## 3. Load & Inspect Data (Using `ds.py`)
+
+```{python}
+df_raw = ds.load_data(DATA_PATH)
+df_raw.head()
+```
+
+```{python}
+summary = ds.initial_summary(df_raw)
+summary
+```
+
+**In Markdown, briefly answer:**
+
+* How many rows and columns?
+* Which features are numeric vs categorical?
+* Are there immediate red flags (missingness, duplicates, odd values)?
+
+---
+
+## 4. Exploratory Data Analysis (EDA)
+
+### 4.1 Summary Statistics
+
+```{python}
+df_raw.describe(include="all").T
+```
+
+---
+
+### 4.2 Missing Data Patterns
+
+```{python}
+df_raw.isna().mean().sort_values(ascending=False)
+```
+
+---
+
+### 4.3 Distributions of Key Numeric Features
+
+```{python}
+numeric_cols = summary["numeric_columns"][:5]  # adjust as needed
+df_raw[numeric_cols].hist(bins=25, figsize=(12, 8))
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+### 4.4 Relationships & Correlations
+
+```{python}
+plt.figure(figsize=(8, 6))
+sns.heatmap(df_raw[numeric_cols].corr(), annot=True, cmap="coolwarm")
+plt.title("Correlation Heatmap")
+plt.show()
+```
+
+**In Markdown, discuss:**
+
+* Skewed features?
+* Outliers?
+* Redundant variables?
+* Potential leakage risks?
+
+---
+
+## 5. Cleaning & Feature Engineering (Using `ds.py`)
+
+### 5.1 Data Cleaning
+
+```{python}
+df_clean = ds.clean_data(df_raw)
+df_clean.shape
+```
+
+**Explain:**
+
+* What rows or values changed?
+* Why was cleaning necessary?
+
+---
+
+### 5.2 Feature Engineering
+
+```{python}
+df_fe = ds.feature_engineering(df_clean)
+df_fe.head()
+```
+
+**Explain:**
+
+* Which new features were created?
+* Why are they meaningful for modeling?
+
+---
+
+## 6. Regression Analysis
+
+### 6.1 Feature & Target Selection
+
+```{python}
+reg_feature_cols = [
+    # "feature_1",
+    # "feature_2",
+]
+
+reg_target_col = "your_regression_target"
+
+X_reg, y_reg = ds.prepare_features_and_target(
+    df_fe,
+    feature_cols=reg_feature_cols,
+    target_col=reg_target_col,
+)
+```
+
+---
+
+### 6.2 Train/Test Split
+
+```{python}
+X_train_reg, X_test_reg, y_train_reg, y_test_reg = ds.split_train_test(
+    X_reg,
+    y_reg,
+    test_size=0.2,
+    stratify=False,
+    random_state=ds.RANDOM_STATE,
+)
+```
+
+---
+
+### 6.3 Model Training & Evaluation
+
+```{python}
+reg_results = ds.run_regression(
+    X_train_reg,
+    X_test_reg,
+    y_train_reg,
+    y_test_reg,
+)
+reg_results
+```
+
+---
+
+### 6.4 Regression Diagnostics
+
+```{python}
+y_pred = reg_results["y_pred"]
+
+plt.scatter(y_test_reg, y_pred, alpha=0.7)
+plt.xlabel("True Values")
+plt.ylabel("Predicted Values")
+plt.title("Regression: True vs Predicted")
+plt.plot(
+    [y_test_reg.min(), y_test_reg.max()],
+    [y_test_reg.min(), y_test_reg.max()],
+    linestyle="--",
+)
+plt.show()
+```
+
+**Interpret:**
+
+* Bias patterns?
+* Over/under-prediction?
+* Metric meaning in real-world units?
+
+---
+
+## 7. Classification Analysis (If Applicable)
+
+### 7.1 Feature & Target Selection
+
+```{python}
+clf_feature_cols = [
+    # "feature_1",
+    # "feature_2",
+]
+
+clf_target_col = "your_classification_target"
+
+X_clf, y_clf = ds.prepare_features_and_target(
+    df_fe,
+    feature_cols=clf_feature_cols,
+    target_col=clf_target_col,
+)
+```
+
+---
+
+### 7.2 Train/Test Split (Stratified)
+
+```{python}
+X_train_clf, X_test_clf, y_train_clf, y_test_clf = ds.split_train_test(
+    X_clf,
+    y_clf,
+    test_size=0.2,
+    stratify=True,
+    random_state=ds.RANDOM_STATE,
+)
+```
+
+---
+
+### 7.3 Model Training & Evaluation
+
+```{python}
+clf_results = ds.run_classification(
+    X_train_clf,
+    X_test_clf,
+    y_train_clf,
+    y_test_clf,
+)
+clf_results
+```
+
+**Interpret:**
+
+* Accuracy vs F1 tradeoff
+* Class imbalance issues
+* Real-world misclassification risk
+
+---
+
+## 8. Clustering Analysis (If Applicable)
+
+### 8.1 Feature Selection
+
+```{python}
+cluster_feature_cols = [
+    # "feature_1",
+    # "feature_2",
+]
+
+X_cluster = df_fe[cluster_feature_cols].dropna()
+```
+
+---
+
+### 8.2 Clustering & Evaluation
+
+```{python}
+cluster_results = ds.run_clustering(
+    X_cluster,
+    n_clusters=3,
+    random_state=ds.RANDOM_STATE,
+)
+cluster_results
+```
+
+---
+
+### 8.3 Cluster Visualization
+
+```{python}
+cluster_labels = cluster_results["labels"]
+X_plot = X_cluster.iloc[:, :2].copy()
+X_plot["cluster"] = cluster_labels
+
+sns.scatterplot(
+    data=X_plot,
+    x=X_plot.columns[0],
+    y=X_plot.columns[1],
+    hue="cluster",
+    palette="tab10",
+)
+plt.title("Clustering Visualization")
+plt.show()
+```
+
+**Interpret:**
+
+* Do clusters reflect meaningful real-world groups?
+* Any surprising segmentation?
+
+---
+
+## 9. Error Analysis & Limitations
+
+Discuss:
+
+* Where models perform worst
+* Data quality limitations
+* Sampling bias
+* Measurement noise
+* Model assumption failures
+
+---
+
+## 10. Ethics, Bias & Societal Impact
+
+Address explicitly:
+
+* Who benefits?
+* Who could be harmed?
+* What historical or power dynamics shape this data?
+* What misuse scenarios are possible?
+
+---
+
+## 11. Conclusion & Future Work
+
+Summarize:
+
+* Key technical findings
+* Key ethical insights
+* What you would improve with:
+
+  * More features
+  * More data
+  * More time
+  * More advanced models
+
+---
+
+✅ **IMPORTANT RULE**
+
+> This notebook must only call functions from `ds.py`.
+> No model fitting, feature engineering, or evaluation logic is allowed directly in this file.

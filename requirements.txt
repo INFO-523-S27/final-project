@@ -1,0 +1,39 @@
+# =========================
+# Core Scientific Stack
+# =========================
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+
+# =========================
+# Visualization
+# =========================
+matplotlib>=3.7
+seaborn>=0.12
+
+# =========================
+# Machine Learning
+# =========================
+scikit-learn>=1.3
+statsmodels>=0.14
+
+# =========================
+# Testing & Code Quality
+# =========================
+pytest>=7.4
+pylint>=3.0
+
+# =========================
+# Reproducible Notebooks & Reports
+# =========================
+jupyter>=1.0
+ipykernel>=6.25
+quarto-cli>=1.4
+nbformat
+
+# =========================
+# Optional (for stretch goals)
+# =========================
+# shap>=0.44
+# streamlit>=1.28
+

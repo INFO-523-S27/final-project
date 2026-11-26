@@ -1,0 +1,22 @@
+on: push
+name: Check repo organization
+jobs:
+  check-repo-organization:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/gchism94/r_gh_actions:latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Check Files
+      run: |
+        checklist::quit_on_failure({
+          checklist::check_allowed_files(
+          c("_extra/*", "images/*", "_freeze/*",
+            "data/*.csv", "data/*.csv", "data/*.xls", "data/*.xlsx", "data/README.md", "data/*.qmd",
+            "README.md", "src/ds.py", "src/test_ds.py", "src/__init__.py", 
+            "index.qmd", "final_project.qmd", "proposal.qmd", "_quarto.yml", "data/*.scss", "*.ipynb", "requirements.txt"
+            )
+          )
+        })
+      shell: Rscript {0}

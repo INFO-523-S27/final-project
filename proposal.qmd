@@ -1,0 +1,223 @@
+---
+title: "Proposal title"
+subtitle: "Proposal"
+author: 
+  - name: "Team Name - Team member 1, Team member 2,..."
+    affiliations:
+      - name: "College of Information Science, University of Arizona"
+description: "Project description"
+format:
+  html:
+    code-tools: true
+    code-overflow: wrap
+    code-line-numbers: true
+    embed-resources: true
+editor: visual
+code-annotations: hover
+execute:
+  warning: false
+jupyter: python3
+---
+
+
+
+## 1. Dataset Selection
+
+### 1.1 TidyTuesday Dataset
+
+```{python}
+#| label: load-pkgs
+#| message: false
+import numpy as np
+```
+
+## Dataset
+
+```{python}
+#| label: load-dataset
+#| message: false
+```
+
+**Dataset Name:**
+
+> *Insert dataset title here*
+
+**TidyTuesday Week Link:**
+
+> *Paste the GitHub URL for the specific TidyTuesday week*
+
+**Raw Data Source(s):**
+
+* *List one or more CSV files used*
+* *Briefly note original data providers if stated*
+
+---
+
+### 1.2 Why This Dataset?
+
+Answer the following:
+
+* Why did you choose this dataset?
+* What makes it interesting or important?
+* What real-world system does it represent?
+* Who is affected by this data?
+
+> *Write 2–4 thoughtful paragraphs.*
+
+---
+
+## 2. Research Questions
+
+You must propose **at least two** of the following analysis types.
+
+### 2.1 Regression Question
+
+* What **numeric outcome** are you predicting?
+* What are your **main predictors**?
+* Why is a **continuous outcome** appropriate here?
+
+> *Example prompt:*
+> “Can we predict ___ based on ___, ___, and ___?”
+
+---
+
+### 2.2 Classification Question
+
+* What is your **target class**?
+* How are the classes defined?
+* Is there **class imbalance**?
+
+> *Example prompt:*
+> “Can we classify whether an observation belongs to ___ based on ___ features?”
+
+---
+
+### 2.3 Clustering Question (Optional if using both Regression + Classification)
+
+* What groups do you expect to emerge?
+* What would those groups **mean in the real world**?
+
+> *Example prompt:*
+> “Do natural groupings exist among ___ based on ___ features?”
+
+---
+
+## 3. Planned Methods
+
+### 3.1 Data Preparation
+
+Describe what you expect to do for:
+
+* Missing values
+* Outliers
+* Feature engineering
+* Scaling/standardization
+* Encoding categorical variables
+
+> *Be specific, not generic.*
+
+---
+
+### 3.2 Models You Plan to Use
+
+| Task                 | Model(s)                                 |
+| -------------------- | ---------------------------------------- |
+| Regression           | e.g., Linear Regression, Ridge           |
+| Classification       | e.g., Logistic Regression, Random Forest |
+| Clustering (if used) | e.g., K-Means, GMM                       |
+
+---
+
+### 3.3 Evaluation Metrics
+
+| Task           | Primary Metric          | Why This Metric? |
+| -------------- | ----------------------- | ---------------- |
+| Regression     | R² / RMSE               |                  |
+| Classification | Accuracy / F1 / ROC-AUC |                  |
+| Clustering     | Silhouette / CH Score   |                  |
+
+---
+
+## 4. Anticipated Challenges & Risks
+
+Discuss:
+
+* Data quality concerns
+* Sampling bias
+* Missingness
+* Temporal issues
+* Measurement error
+* Imbalanced classes
+* Small sample size
+
+> *This is graded for honesty and depth of thought.*
+
+---
+
+## 5. Ethical & Societal Considerations
+
+You must address:
+
+* Who could be harmed if this analysis is misused?
+* What assumptions are you making?
+* Are any important populations underrepresented?
+* Could your model reinforce existing inequalities?
+
+> *This section is required and heavily emphasized.*
+
+---
+
+## 6. Reproducibility & Engineering Plan
+
+Briefly describe:
+
+* How you will structure your `ds.py` pipeline
+* How you will write tests in `test_ds.py`
+* How your notebook will call into the pipeline
+* How someone else could reproduce your results
+
+---
+
+## 7. Expected Outcomes
+
+What do you realistically expect to find?
+
+* Do you expect strong or weak signal?
+* Do you expect clean clusters or noisy ones?
+* What would a “successful” vs. “null” result look like?
+
+---
+
+## 8. Project Timeline (Mini-Gantt)
+
+| Week   | Deliverable              |
+| ------ | ------------------------ |
+| Week 1 | Proposal + Data Cleaning |
+| Week 2 | Modeling + Testing       |
+| Week 3 | Notebook + Report        |
+| Week 4 | Final Submission         |
+
+---
+
+## 9. Acknowledgments & Data Sources
+
+List:
+
+* TidyTuesday
+* Original data providers
+* Any external references used for context
+
+---
+
+## ✅ Submission Checklist
+
+* [ ] Dataset chosen from TidyTuesday
+* [ ] Clear regression question
+* [ ] Clear classification or clustering question
+* [ ] Methods justified
+* [ ] Ethics section completed
+* [ ] Engineering plan defined
+
+---
+
+✅ **This proposal must be approved before full project work begins.**

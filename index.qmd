@@ -1,0 +1,383 @@
+---
+title: "Project Title"
+subtitle: "INFO 523 - Final Project"
+author: 
+  - name: "First name Last name"
+    affiliations:
+      - name: "College of Information Science, University of Arizona"
+description: "Project description"
+format:
+   html:
+    code-tools: true
+    code-overflow: wrap
+    embed-resources: true
+editor: visual
+execute:
+  warning: false
+  echo: false
+  eval: false
+jupyter: python3
+---
+
+
+## 1. Project Overview
+
+> **Replace this with your own text.**
+
+* **Dataset:** Describe your chosen TidyTuesday dataset.
+* **Source:** Link to the TidyTuesday week.
+* **Research questions:**
+
+  * Regression: What are you predicting?
+  * Classification: What are you classifying (if applicable)?
+  * Clustering: What structure are you trying to uncover (if applicable)?
+* **High-level goal:** What decisions or insights could your analysis inform?
+
+---
+
+## 2. Setup
+
+Load core libraries and your `ds` module.
+
+```{python}
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from src import ds  # your final project pipeline
+
+plt.style.use("default")
+%config InlineBackend.figure_format = "retina"
+```
+
+Set your data path (update this to your actual CSV):
+
+```{python}
+DATA_PATH = "data/your_tidytuesday_data.csv"
+```
+
+---
+
+## 3. Load & Inspect Data
+
+Use your `load_data` and `initial_summary` functions.
+
+```{python}
+df_raw = ds.load_data(DATA_PATH)
+df_raw.head()
+```
+
+```{python}
+summary = ds.initial_summary(df_raw)
+summary
+```
+
+**Questions to answer in text:**
+
+* How many rows and columns?
+* Which columns are numeric vs. categorical?
+* Any obvious issues (missingness, duplicates, odd values)?
+
+*Write your brief observations here.*
+
+---
+
+## 4. Exploratory Data Analysis (EDA)
+
+Use `df_raw` only (no cleaning yet) to build intuition.
+
+```{python}
+df_raw.describe(include="all").T
+```
+
+Pick a few key variables to plot:
+
+```{python}
+# Example: numeric distributions
+numeric_cols = summary["numeric_columns"][:5]
+df_raw[numeric_cols].hist(bins=20, figsize=(10, 8))
+plt.tight_layout()
+```
+
+```{python}
+# Example: pairplot for a small subset of numeric features
+sns.pairplot(df_raw[numeric_cols].dropna())
+```
+
+In text, discuss:
+
+* Which variables have skewed distributions?
+* Which variables might need transformation?
+* Do you see obvious outliers?
+
+---
+
+## 5. Cleaning & Feature Engineering
+
+Now switch from `df_raw` to **cleaned and engineered** data using your pipeline.
+
+### 5.1 Cleaning
+
+```{python}
+df_clean = ds.clean_data(df_raw)
+df_clean.head()
+```
+
+Check what changed:
+
+```{python}
+df_raw.shape, df_clean.shape
+```
+
+> In text:
+>
+> * What cleaning operations did `clean_data` perform?
+> * How many rows were dropped (if any), and why is that reasonable?
+
+### 5.2 Feature Engineering
+
+```{python}
+df_fe = ds.feature_engineering(df_clean)
+df_fe.head()
+```
+
+> In text:
+>
+> * What new features did you create?
+> * Why are they helpful for your regression/classification/clustering tasks?
+
+---
+
+## 6. Supervised Task 1 – Regression
+
+### 6.1 Define Features & Target
+
+Pick your regression target and features (these must match what you implemented in `ds.py`):
+
+```{python}
+reg_feature_cols = [
+    # "feature_1",
+    # "feature_2",
+    # ...
+]
+
+reg_target_col = "your_regression_target"
+
+X_reg, y_reg = ds.prepare_features_and_target(
+    df_fe,
+    feature_cols=reg_feature_cols,
+    target_col=reg_target_col,
+)
+
+X_reg.shape, y_reg.shape
+```
+
+### 6.2 Train/Test Split
+
+```{python}
+X_train_reg, X_test_reg, y_train_reg, y_test_reg = ds.split_train_test(
+    X_reg,
+    y_reg,
+    test_size=0.2,
+    stratify=False,  # regression: keep False
+    random_state=ds.RANDOM_STATE,
+)
+```
+
+### 6.3 Train Model & Evaluate
+
+You can either use the **full workflow**:
+
+```{python}
+reg_result = ds.full_regression_workflow(
+    df=df_fe,
+    feature_cols=reg_feature_cols,
+    target_col=reg_target_col,
+    test_size=0.2,
+    random_state=ds.RANDOM_STATE,
+)
+
+reg_result["metrics"]
+```
+
+Or call the pieces manually:
+
+```{python}
+# Manual version (uncomment if not using full_regression_workflow)
+# model_reg = ds.train_regression_model(X_train_reg, y_train_reg)
+# y_pred_reg = ds.predict_regression(model_reg, X_test_reg)
+# reg_metrics = ds.regression_metrics(y_test_reg, y_pred_reg)
+# reg_metrics
+```
+
+### 6.4 Visualize & Interpret
+
+```{python}
+y_test = reg_result["y_test"]
+y_pred = reg_result["y_pred"]
+
+plt.figure()
+plt.scatter(y_test, y_pred, alpha=0.7)
+plt.xlabel("True values")
+plt.ylabel("Predicted values")
+plt.title("Regression: True vs Predicted")
+plt.plot([y_test.min(), y_test.max()],
+         [y_test.min(), y_test.max()],
+         linestyle="--")
+plt.show()
+```
+
+In text:
+
+* Are predictions systematically biased (over/under-prediction)?
+* Is the R² meaningful in this context?
+* Are there data regions where the model does particularly poorly?
+
+---
+
+## 7. Supervised Task 2 – Classification (If Applicable)
+
+If your project includes classification:
+
+### 7.1 Define Features & Target
+
+```{python}
+clf_feature_cols = [
+    # "feature_1",
+    # "feature_2",
+    # ...
+]
+
+clf_target_col = "your_classification_target"
+
+X_clf, y_clf = ds.prepare_features_and_target(
+    df_fe,
+    feature_cols=clf_feature_cols,
+    target_col=clf_target_col,
+)
+```
+
+### 7.2 Train/Test Split (With Stratification)
+
+```{python}
+X_train_clf, X_test_clf, y_train_clf, y_test_clf = ds.split_train_test(
+    X_clf,
+    y_clf,
+    test_size=0.2,
+    stratify=True,
+    random_state=ds.RANDOM_STATE,
+)
+```
+
+### 7.3 Train Model & Evaluate
+
+```{python}
+clf_model = ds.train_classification_model(X_train_clf, y_train_clf)
+y_pred_clf = ds.predict_classification(clf_model, X_test_clf)
+
+clf_metrics = ds.classification_metrics(y_test_clf, y_pred_clf)
+clf_metrics
+```
+
+In text:
+
+* Is accuracy alone sufficient in your context?
+* How do your metrics look across classes (if imbalanced)?
+* Could misclassification have ethical or practical consequences?
+
+---
+
+## 8. Unsupervised Task – Clustering (If Applicable)
+
+### 8.1 Select Features for Clustering
+
+```{python}
+cluster_feature_cols = [
+    # "feature_1",
+    # "feature_2",
+    # ...
+]
+
+X_cluster = df_fe[cluster_feature_cols].dropna()
+X_cluster.shape
+```
+
+### 8.2 Run Clustering
+
+Pick a reasonable cluster count (justify in your report):
+
+```{python}
+n_clusters = 3  # or your chosen K
+
+cluster_labels = ds.run_clustering_model(
+    X_cluster,
+    n_clusters=n_clusters,
+    random_state=ds.RANDOM_STATE,
+)
+
+cluster_metrics = ds.clustering_metrics(X_cluster, cluster_labels)
+cluster_metrics
+```
+
+### 8.3 Visualize & Interpret
+
+For 2D or 3D subsets of features:
+
+```{python}
+X_plot = X_cluster.iloc[:, :2].copy()
+X_plot["cluster"] = cluster_labels
+
+sns.scatterplot(
+    data=X_plot,
+    x=X_plot.columns[0],
+    y=X_plot.columns[1],
+    hue="cluster",
+    palette="tab10"
+)
+plt.title("Clustering: Feature Space")
+plt.show()
+```
+
+In text:
+
+* Do clusters correspond to meaningful groups?
+* Are there any surprising combinations?
+* How stable or fragile do the clusters seem?
+
+---
+
+## 9. Error Analysis & Limitations
+
+Reflect on:
+
+* Where your models perform poorly and why.
+* Any important variables that were left out.
+* Data issues: missing, biased, noisy, or unrepresentative.
+* Methodological limitations (e.g., linearity assumptions, small n).
+
+---
+
+## 10. Ethical & Societal Considerations
+
+Address explicitly:
+
+* Who is represented in this data? Who is missing?
+* What harms could arise if these models were used in practice?
+* Are there historical, social, or political contexts that shape the data?
+* What would **responsible use** of this analysis look like?
+
+---
+
+## 11. Conclusion & Future Work
+
+Summarize:
+
+* Key findings from regression, classification, and/or clustering.
+* What you learned about the system your data represent.
+* What you would do next with:
+
+  * more time,
+  * more data,
+  * or more advanced methods.
+
