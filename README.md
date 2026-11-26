@@ -57,7 +57,8 @@ You will **select your own dataset from the TidyTuesday archive**, justify your 
 | Component | File | Points |
 |----------|------|--------|
 | Dataset Justification | `proposal.qmd` | 10 |
-| Reproducible ML Pipeline | `ds.py` + `test_ds.py`  | 30 |
+| Reproducible ML Pipeline | `src/ds.py` | 30 |
+| Automated Testing | `src/test_ds.py` | 5 |
 | Analysis & Visualization | `final_project.qmd` | 20 |
 | Final Written Report | `index.qmd` | 15 |
 | Final Presentation | Google Slide + Panopto | 15 |
@@ -156,7 +157,7 @@ You must implement **at least 8 real unit tests** that validate:
 
 Your notebook must:
 
-1. Load data using `ds.py`
+1. Load data using `src/ds.py`
 2. Perform EDA:
    - Distributions
    - Correlations
@@ -171,7 +172,7 @@ Your notebook must:
 5. Interpret results in Markdown
 
 ⛔ **No model logic is allowed inside the notebook.**  
-✅ All models must come from `ds.py`.
+✅ All models must come from `src/ds.py`.
 
 ---
 
@@ -213,7 +214,7 @@ pytest
 ### 3️⃣ Run Code Quality Check
 
 ```bash
-pylint ds.py
+pylint src/ds.py
 ```
 
 ✅ Minimum acceptable score: **9.0**
@@ -269,13 +270,13 @@ You will lose points for:
 Before your final push:
 
 * ✅ Proposal approved
-* ✅ `ds.py` complete & clean
-* ✅ `test_ds.py` complete
+* ✅ `src/ds.py` complete & clean
+* ✅ `src/test_ds.py` contains at least 8 substantive unit tests
 * ✅ `pytest` passes
-* ✅ `pylint ds.py` ≥ 9.0
+* ✅ `pylint src/ds.py` ≥ 9.0
 * ✅ `final_project.qmd` renders
-* ✅ `report.md` submitted
-* ✅ Dataset placed in `/data`
+* ✅ `index.qmd` submitted
+* ✅ Dataset placed in `data/`
 * ✅ Clean Git history
 
 ---
